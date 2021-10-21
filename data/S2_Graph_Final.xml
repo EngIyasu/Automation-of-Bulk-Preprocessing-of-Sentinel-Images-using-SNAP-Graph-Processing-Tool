@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='latin-1'?>
+<graph id="Graph">
+  <version>1.0</version>
+  <node id="Read">
+    <operator>Read</operator>
+    <sources />
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>$input</file>
+    </parameters>
+  </node>
+  <node id="Resample">
+    <operator>Resample</operator>
+    <sources>
+      <sourceProduct refid="Read" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <referenceBand />
+      <targetWidth />
+      <targetHeight />
+      <targetResolution>10</targetResolution>
+      <upsampling>Nearest</upsampling>
+      <downsampling>First</downsampling>
+      <flagDownsampling>First</flagDownsampling>
+      <resamplingPreset />
+      <bandResamplings />
+      <resampleOnPyramidLevels>true</resampleOnPyramidLevels>
+    </parameters>
+  </node>
+  <node id="Reproject">
+    <operator>Reproject</operator>
+    <sources>
+      <sourceProduct refid="Resample" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <wktFile />
+      <crs>GEOGCS["WGS84(DD)", 
+  DATUM["WGS84", 
+    SPHEROID["WGS84", 6378137.0, 298.257223563]], 
+  PRIMEM["Greenwich", 0.0], 
+  UNIT["degree", 0.017453292519943295], 
+  AXIS["Geodetic longitude", EAST], 
+  AXIS["Geodetic latitude", NORTH]]</crs>
+      <resampling>Nearest</resampling>
+      <referencePixelX />
+      <referencePixelY />
+      <easting />
+      <northing />
+      <orientation />
+      <pixelSizeX />
+      <pixelSizeY />
+      <width />
+      <height />
+      <tileSizeX />
+      <tileSizeY />
+      <orthorectify>false</orthorectify>
+      <elevationModelName />
+      <noDataValue>NaN</noDataValue>
+      <includeTiePointGrids>true</includeTiePointGrids>
+      <addDeltaBands>false</addDeltaBands>
+    </parameters>
+  </node>
+  <node id="Subset">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Reproject" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands />
+      <region>3000,5000,1000,1000</region>
+      <referenceBand />
+      <geoRegion />
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames />
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="BandMaths">
+    <operator>BandMaths</operator>
+    <sources>
+      <sourceProduct refid="Subset" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <targetBands>
+        <targetBand>
+          <name>NDVI</name>
+          <type>float32</type>
+          <expression>(B8 - B4) / (B8 + B4)</expression>
+          <description />
+          <unit />
+          <noDataValue>0.0</noDataValue>
+        </targetBand>
+      </targetBands>
+      <variables />
+    </parameters>
+  </node>
+  <node id="Biophysical10mOp">
+    <operator>Biophysical10mOp</operator>
+    <sources>
+      <sourceProduct refid="Subset" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sensor>S2A_10m</sensor>
+      <computeLAI>true</computeLAI>
+      <computeFapar>true</computeFapar>
+      <computeFcover>true</computeFcover>
+    </parameters>
+  </node>
+  <node id="BandMerge">
+    <operator>BandMerge</operator>
+    <sources>
+      <sourceProduct refid="Biophysical10mOp" />
+      <sourceProduct.1 refid="BandMaths" />
+      <sourceProduct.2 refid="Subset" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands />
+      <geographicError>1.0E-5</geographicError>
+    </parameters>
+  </node>
+  <node id="Write">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="BandMerge" />
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>$output</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <applicationData id="Presentation">
+    <Description />
+    <node id="Read">
+            <displayPosition x="35.0" y="128.0" />
+    </node>
+    <node id="Resample">
+      <displayPosition x="136.0" y="131.0" />
+    </node>
+    <node id="Reproject">
+      <displayPosition x="245.0" y="147.0" />
+    </node>
+    <node id="Subset">
+      <displayPosition x="355.0" y="149.0" />
+    </node>
+    <node id="BandMaths">
+      <displayPosition x="479.0" y="70.0" />
+    </node>
+    <node id="Biophysical10mOp">
+      <displayPosition x="502.0" y="237.0" />
+    </node>
+    <node id="BandMerge">
+      <displayPosition x="648.0" y="140.0" />
+    </node>
+    <node id="Write">
+            <displayPosition x="849.0" y="149.0" />
+    </node>
+  </applicationData>
+</graph>

@@ -1,0 +1,16 @@
+ENVI
+description = {Reflectance in band B8A - Unit: dl - Wavelength: 865.0nm}
+samples = 1000
+lines = 1000
+bands = 1
+header offset = 0
+file type = ENVI Standard
+data type = 4
+interleave = bsq
+byte order = 1
+band names = { B8A }
+map info = {Geographic Lat/Lon,501.5,501.5,11.826866252972955,44.6116669877063,9.342021539213618E-5,9.342021539213618E-5,WGS84,units=Degrees}
+coordinate system string = {GEOGCS["WGS84(DD)", DATUM["WGS84", SPHEROID["WGS84", 6378137.0, 298.257223563]], PRIMEM["Greenwich", 0.0], UNIT["degree", 0.017453292519943295], AXIS["Geodetic longitude", EAST], AXIS["Geodetic latitude", NORTH]]}
+wavelength = {865.0}
+data gain values = {1.0}
+data offset values = {0.0}
